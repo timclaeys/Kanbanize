@@ -39,8 +39,8 @@ namespace Kanbanize
         Board Boards;                                                               //object of kanbanize api handler
         HistoryDetails historyDetails;                                              //object of kanbanize api handler                      
 
-        yourProjects allProjects = new yourProjects();                              //all of the projects,board,tasks
-        List<yourTask> foundTasks = new List<yourTask>();                           //tasks that have the asked_name or a part of it in the assignees name
+        YourProjects allProjects = new YourProjects();                              //all of the projects,board,tasks
+        List<YourTask> foundTasks = new List<YourTask>();                           //tasks that have the asked_name or a part of it in the assignees name
         AutoCompleteStringCollection source = new AutoCompleteStringCollection();   //collection of words that occur in the assignee property, this is used s an autocomplete database for the search term
                         
         Excel.Application xlApp;                                                    //the excell application
@@ -86,12 +86,12 @@ namespace Kanbanize
             xlWorkSheet.Cells[currentRow, 11] = "Project";
             xlWorkSheet.Cells[currentRow, 12] = "project id";
             currentRow++;                                                                                       //next row
-            foreach (yourTask yourTaskBuf in foundTasks)                                                        //for every task in foundtasks
+            foreach (YourTask yourTaskBuf in foundTasks)                                                        //for every task in foundtasks
             {
                 bool searchForStart = false;                                                                    
                 if ((yourTaskBuf.columnname == "Done") || (yourTaskBuf.columnname == "Archived"))               //Task is done
                 {
-                    foreach (yourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)                      //for every task event of the current task
+                    foreach (YourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)                      //for every task event of the current task
                     {
                         DateTime test = Convert.ToDateTime(yourTaskEventBuf.entrydate);                         //entrydate for the current task event
 
@@ -128,7 +128,7 @@ namespace Kanbanize
                     {
                         if (yourTaskBuf.columnpath == "Backlog")                                                //if the task is in backlog
                         {
-                            foreach (yourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)              //for every task event in the current task
+                            foreach (YourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)              //for every task event in the current task
                             {
                                 DateTime test = Convert.ToDateTime(yourTaskEventBuf.entrydate);                 //the entrydate for the current taskevent
                                 if((yourTaskEventBuf.historyevent == "Task moved")&&(start <= test)&&( test <= stop)&&(yourTaskEventBuf.details.Contains("In Progress")))//als in progres was en naar backlog gestuurd geweest binnen de periode.
@@ -141,7 +141,7 @@ namespace Kanbanize
                         }
                         else
                         {
-                            foreach (yourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)              //for every task event in the current task
+                            foreach (YourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)              //for every task event in the current task
                             {
                                 DateTime test = Convert.ToDateTime(yourTaskEventBuf.entrydate);                 //the entrydate for the current taskevent
                                 if ((yourTaskEventBuf.historyevent == "Task moved") && (test <= stop))          // de taak is voor de stop tijd gemoved naar in progress
@@ -159,7 +159,7 @@ namespace Kanbanize
             }
             
         }           
-        private void writeLineToExcel(yourTask yourTaskBuffer)//write a line to the current excell file with the property's of a task
+        private void writeLineToExcel(YourTask yourTaskBuffer)//write a line to the current excell file with the property's of a task
         {
             xlWorkSheet.Cells[currentRow, 1] = yourTaskBuffer.assignee;                             //write the tasks property's to the excel file
             xlWorkSheet.Cells[currentRow, 2] = yourTaskBuffer.title;
@@ -169,11 +169,11 @@ namespace Kanbanize
             xlWorkSheet.Cells[currentRow, 6] = yourTaskBuffer.lanename;
             xlWorkSheet.Cells[currentRow, 7] = yourTaskBuffer.subtasks;
             xlWorkSheet.Cells[currentRow, 8] = yourTaskBuffer.subtaskscomplete;
-            foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                     //for every project
+            foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                     //for every project
             {
-                foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)                        //for every board
+                foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)                        //for every board
                 {  
-                    foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)                         //for every task
+                    foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)                         //for every task
                     {
                         if (yourTaskBuf.taskid == yourTaskBuffer.taskid)                            //if the tasks are the same the board and project of the given task(yourtaskbuffer) are found
                         {
@@ -188,7 +188,7 @@ namespace Kanbanize
             currentRow++;                                                                           //next row
             if (yourTaskBuffer.subtaskList.Count > 0)                                               //if there are subtasks write them to the excell file
             {
-                foreach (yourSubTask yoursubtaskBuf in yourTaskBuffer.subtaskList)                  //for every subtask in the current task
+                foreach (YourSubTask yoursubtaskBuf in yourTaskBuffer.subtaskList)                  //for every subtask in the current task
                 {
                     xlWorkSheet.Cells[currentRow, 1] = yoursubtaskBuf.assignee;                     //write the subtask propertys to the excell file
                     xlWorkSheet.Cells[currentRow, 2] = yoursubtaskBuf.title;
@@ -207,18 +207,18 @@ namespace Kanbanize
             projecten = kanbanizeApiObj.getProjectsAndBoards();                                         //download the list of projects and boards
             foreach (Project Project in projecten.projectlist)                                          //for every project in this list
             {
-                yourProject yourProjectBuf = new yourProject();                                         
+                YourProject yourProjectBuf = new YourProject();                                         
                 yourProjectBuf.name = Project.name;
                 yourProjectBuf.id = Project.id;
                 foreach (Boardid boardId in Project.boardlist)                                          //for every board in this list
                 {
-                    yourBoard yourBoardBuf = new yourBoard();
+                    YourBoard yourBoardBuf = new YourBoard();
                     yourBoardBuf.name = boardId.name;
                     yourBoardBuf.id = boardId.id;
                     Boards = kanbanizeApiObj.getTasks(boardId.id, true);                                //download all the tasks for a given board
                     foreach (Task taken in Boards.tasklist)                                             //for every task in this board
                     {
-                        yourTask yourTaskBuf = new yourTask();
+                        YourTask yourTaskBuf = new YourTask();
                         yourTaskBuf.taskid = taken.taskid;
                         yourTaskBuf.position = taken.position;
                         yourTaskBuf.type = taken.type;
@@ -245,7 +245,7 @@ namespace Kanbanize
                         yourTaskBuf.loggedtime = taken.loggedtime;
                         foreach (SubTask subtasks in taken.subtasklist)                               //for every subtask in the current task
                         {
-                            yourSubTask yourSubTaskBuf = new yourSubTask();
+                            YourSubTask yourSubTaskBuf = new YourSubTask();
                             yourSubTaskBuf.assignee = subtasks.assignee;
                             yourSubTaskBuf.completiondate = subtasks.completiondate;
                             yourSubTaskBuf.subtaskid = subtasks.subtaskid;
@@ -315,13 +315,13 @@ namespace Kanbanize
         }
         private void populateTreeView()//populate the treeview
         {
-            foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                                                                                         //every project (level 1)
+            foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                                                                                         //every project (level 1)
             {
                 treeView1.Nodes.Add("Project_" + yourProjectBuf.id, yourProjectBuf.name);                                                                               //add node to level 1
-                foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)                                                                                            //every board (level2)
+                foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)                                                                                            //every board (level2)
                 {
                     treeView1.Nodes["Project_" + yourProjectBuf.id].Nodes.Add("Board_" + yourBoardBuf.id, yourBoardBuf.name);                                           //add node to level 2
-                    foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)                                                                                             //every task (level 3)
+                    foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)                                                                                             //every task (level 3)
                     {
                         treeView1.Nodes["Project_" + yourProjectBuf.id].Nodes["Board_" + yourBoardBuf.id].Nodes.Add("Task_" + yourTaskBuf.taskid, yourTaskBuf.title);   //add node to level 3
                     }
@@ -329,19 +329,19 @@ namespace Kanbanize
                 }
             }
         }
-        private void populateYourProject(yourProject yourProjectBuf, bool clearLabels)//populate project labels
+        private void populateYourProject(YourProject yourProjectBuf, bool clearLabels)//populate project labels
         {
             labelProjectName.Text = (clearLabels) ? "Project name: " : "Project name: " + yourProjectBuf.name;
             labelProjectId.Text = (clearLabels) ? "Project id: " : "Project id: " + yourProjectBuf.id;
             button2.Enabled = false;
         }
-        private void populateYourBoard(yourBoard yourBoardBuf, bool clearLabels)//populate board labels
+        private void populateYourBoard(YourBoard yourBoardBuf, bool clearLabels)//populate board labels
         {
             labelBoardName.Text = (clearLabels) ? "Board name: " : "Board name: " + yourBoardBuf.name;
             labelBoardId.Text = (clearLabels) ? "Board id: " : "Board id: " + yourBoardBuf.id;
 
         }
-        private void populateYourTask(yourTask yourTaskBuf, bool clearLabels)//populate task labels
+        private void populateYourTask(YourTask yourTaskBuf, bool clearLabels)//populate task labels
         {
             labelTaskTitle.Text = (clearLabels) ? "Task title: " : "Task title: " + yourTaskBuf.title;
             labelTaskId.Text = (clearLabels) ? "Task id: " : "Task id: " + yourTaskBuf.taskid;
@@ -375,14 +375,14 @@ namespace Kanbanize
             else
             {
                 listBoxSubTasks.Items.Clear();
-                foreach (yourSubTask yourSubTaskBuf in yourTaskBuf.subtaskList)
+                foreach (YourSubTask yourSubTaskBuf in yourTaskBuf.subtaskList)
                 {
 
                     listBoxSubTasks.Items.Add(yourSubTaskBuf.title);
                 }
 
                 listBox1.Items.Clear();
-                foreach (yourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)
+                foreach (YourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)
                 {
                     listBox1.Items.Add(yourTaskEventBuf.historyevent + " " + yourTaskEventBuf.details);
                 }
@@ -397,14 +397,14 @@ namespace Kanbanize
                 button2.Enabled = true;
             }
         }
-        private void populateYourSubTask(yourSubTask yourSubTaskBuf, bool clearLabels)//populate subtasks
+        private void populateYourSubTask(YourSubTask yourSubTaskBuf, bool clearLabels)//populate subtasks
         {
             labelSubtaskTitle.Text = (clearLabels) ? "Subtask title: " : "Subtask title: " + yourSubTaskBuf.title;
             labelSubtaskId.Text = (clearLabels) ? "Subtask id: " : "Subtask id: " + yourSubTaskBuf.subtaskid;
             labelSubTaskAssignee.Text = (clearLabels) ? "Assignee: " : "Assignee: " + yourSubTaskBuf.assignee;
             labelSubTaskCompletionDate.Text = (clearLabels) ? "Completion date: " : "Completion date: " + yourSubTaskBuf.completiondate;
         }
-        private void populateYourTaskEvents(yourTaskEvent yourTaskEventBuf, bool clearlabels)//popullate taskevents
+        private void populateYourTaskEvents(YourTaskEvent yourTaskEventBuf, bool clearlabels)//popullate taskevents
         {
             labelHistoryAuthor.Text = (clearlabels) ? "Author: " : "Author: " + yourTaskEventBuf.author;
             labelHistoryDetails.Text = (clearlabels) ? "Details: " : "Details: " + yourTaskEventBuf.details;
@@ -421,11 +421,11 @@ namespace Kanbanize
             dateTimePicker1.Enabled = true;
             dateTimePicker2.Enabled = true;
 
-            foreach (yourProject yourProjectBuf in allProjects.yourProjectList)         //for every project
+            foreach (YourProject yourProjectBuf in allProjects.yourProjectList)         //for every project
             {
-                foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)            //for every board
+                foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)            //for every board
                 {
-                    foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)             //for every task
+                    foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)             //for every task
                     {
                         if (!source.Contains(yourTaskBuf.assignee))                     //if the assignee is not already in the autocompletelist
                             source.Add(yourTaskBuf.assignee);                           //add assignee to the autocompletelist
@@ -474,15 +474,15 @@ namespace Kanbanize
             switch (selectedNode.Level)                                                                         //what is the level of the selected level
             {
                 case 0:                                                                                         //level 0 (project selected)
-                    foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                         //find the project
+                    foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                         //find the project
                     {
                         if (selectedNode.Name.Substring(8, selectedNode.Name.Length - 8) == yourProjectBuf.id)
                         {
                             populateYourProject(yourProjectBuf, false);                                         //populate the project labels
 
-                            yourBoard yourBoardDummy = new yourBoard();
-                            yourTask yourTaskDummy = new yourTask();
-                            yourSubTask yourSubTaskDummy = new yourSubTask();
+                            YourBoard yourBoardDummy = new YourBoard();
+                            YourTask yourTaskDummy = new YourTask();
+                            YourSubTask yourSubTaskDummy = new YourSubTask();
                             populateYourBoard(yourBoardDummy, true);                                            //clear the board labels
                             populateYourTask(yourTaskDummy, true);                                              //clear the task labels
                             populateYourSubTask(yourSubTaskDummy, true);                                        //clear the subtask labels
@@ -497,17 +497,17 @@ namespace Kanbanize
                     }
                     break;
                 case 1:                                                                                         //level 1 (board selected)
-                    foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                         //find the board
+                    foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                         //find the board
                     {
-                        foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)
+                        foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)
                         {
                             if (selectedNode.Name.Substring(6, selectedNode.Name.Length - 6) == yourBoardBuf.id)
                             {
                                 populateYourProject(yourProjectBuf, false);                                     //populate the project labels
                                 populateYourBoard(yourBoardBuf, false);                                         //project the board labels
 
-                                yourTask yourTaskDummy = new yourTask();
-                                yourSubTask yourSubTaskDummy = new yourSubTask();
+                                YourTask yourTaskDummy = new YourTask();
+                                YourSubTask yourSubTaskDummy = new YourSubTask();
                                 populateYourTask(yourTaskDummy, true);                                          //clear the task labels
                                 populateYourSubTask(yourSubTaskDummy, true);                                    //clear the subtask labels
 
@@ -524,11 +524,11 @@ namespace Kanbanize
                 BreakLoops1:
                     break;
                 case 2:                                                                                         //level 2 (task selected)
-                    foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                         //find the task
+                    foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                         //find the task
                     {
-                        foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)
+                        foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)
                         {
-                            foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)
+                            foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)
                             {
                                 if (selectedNode.Name.Substring(5, selectedNode.Name.Length - 5) == yourTaskBuf.taskid)
                                 {
@@ -537,7 +537,7 @@ namespace Kanbanize
                                     button2.Enabled = false;
                                     populateYourTask(yourTaskBuf, false);                                       //populate task labels
 
-                                    yourSubTask yourSubTaskDummy = new yourSubTask();
+                                    YourSubTask yourSubTaskDummy = new YourSubTask();
                                     populateYourSubTask(yourSubTaskDummy, true);                                //clear the subtask labels
 
                                     currentProjectId = yourProjectBuf.id;                                       //save the project id
@@ -567,13 +567,13 @@ namespace Kanbanize
         #region listboxes
         private void listBoxSubTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
+            foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
             {
-                foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)
+                foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)
                 {
-                    foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)
+                    foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)
                     {
-                        foreach (yourSubTask yourSubTaskBuf in yourTaskBuf.subtaskList)
+                        foreach (YourSubTask yourSubTaskBuf in yourTaskBuf.subtaskList)
                         {
                             if (listBoxSubTasks.SelectedItem.ToString() == yourSubTaskBuf.title)    
                             {
@@ -640,18 +640,18 @@ namespace Kanbanize
         }
         private void button2_Click(object sender, EventArgs e)//download task history
         {
-            foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
+            foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
             {
-                foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)
+                foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)
                 {
-                    foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)
+                    foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)
                     {
                         if (yourTaskBuf.taskid == currentTaksId)
                         {
                             historyDetails = kanbanizeApiObj.getTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
                             foreach (TaskEvent taskEventBuf in historyDetails.eventList)
                             {
-                                yourTaskEvent yourTaskEventBuf = new yourTaskEvent();
+                                YourTaskEvent yourTaskEventBuf = new YourTaskEvent();
                                 yourTaskEventBuf.author = taskEventBuf.author;
                                 yourTaskEventBuf.details = taskEventBuf.details;
                                 yourTaskEventBuf.entrydate = taskEventBuf.entrydate;
@@ -752,11 +752,11 @@ namespace Kanbanize
             double step = (double)100 / (double)numberTasks;                                                            //how much percent is done when 1 task is done
             double progress = 0;                                                                                        //the progress in % (needs to be send to the toolstripprogresbar
 
-            foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                                         //for every project
+            foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                                         //for every project
             {
-                foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)                                            //for every board
+                foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)                                            //for every board
                 {
-                    foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)                                             // for every task
+                    foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)                                             // for every task
                     {
                         if (((yourTaskBuf.assignee.Contains(asked_name)) && (yourTaskBuf.columnname != "Requested")) || (checkBox1.Checked == true)) //if the task.assignee containts the searchterm and the task is not in the requested column, or everybody is selected  then download
                         {
@@ -765,7 +765,7 @@ namespace Kanbanize
                                 historyDetails = kanbanizeApiObj.getTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
                                 foreach (TaskEvent taskEventBuf in historyDetails.eventList)
                                 {
-                                    yourTaskEvent yourTaskEventBuf = new yourTaskEvent();
+                                    YourTaskEvent yourTaskEventBuf = new YourTaskEvent();
                                     yourTaskEventBuf.author = taskEventBuf.author;
                                     yourTaskEventBuf.details = taskEventBuf.details;
                                     yourTaskEventBuf.entrydate = taskEventBuf.entrydate;
@@ -825,13 +825,13 @@ namespace Kanbanize
         private void listBox1_SelectedValueChanged(object sender, EventArgs e)
         {
             ListBox test = (ListBox)sender;
-            foreach (yourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
+            foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
             {
-                foreach (yourBoard yourBoardBuf in yourProjectBuf.boardList)
+                foreach (YourBoard yourBoardBuf in yourProjectBuf.boardList)
                 {
-                    foreach (yourTask yourTaskBuf in yourBoardBuf.taskList)
+                    foreach (YourTask yourTaskBuf in yourBoardBuf.taskList)
                     {
-                        foreach (yourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)
+                        foreach (YourTaskEvent yourTaskEventBuf in yourTaskBuf.historyDetails)
                         {
                             
                             if (test.SelectedItem.ToString() == (yourTaskEventBuf.historyevent + " " + yourTaskEventBuf.details))
@@ -856,26 +856,26 @@ namespace Kanbanize
      * everything is in 1 object.
      * this could not be done in KanbanizeConnect because this 1 object exists from multiple xml files received from the api*/
      #region yourClasses
-    public class yourProjects
+    public class YourProjects
     {
-        public List<yourProject> yourProjectList = new List<yourProject>();
+        public List<YourProject> yourProjectList = new List<YourProject>();
     }
 
-    public class yourProject
+    public class YourProject
     {
         public string name { get; set; }
         public string id { get; set; }
-        public List<yourBoard> boardList = new List<yourBoard>();
+        public List<YourBoard> boardList = new List<YourBoard>();
     }
 
-    public class yourBoard
+    public class YourBoard
     {
         public string name {get; set;}
         public string id { get; set;}
-        public List<yourTask> taskList = new List<yourTask>();
+        public List<YourTask> taskList = new List<YourTask>();
     }
 
-    public class yourTask
+    public class YourTask
     {
         public string taskid { get; set; }
         public string position { get; set; }
@@ -901,11 +901,11 @@ namespace Kanbanize
         public string lanename { get; set; }
         public string columnpath { get; set; }
         public string loggedtime { get; set; }
-        public List<yourSubTask> subtaskList = new List<yourSubTask>();
-        public List<yourTaskEvent> historyDetails = new List<yourTaskEvent>();
+        public List<YourSubTask> subtaskList = new List<YourSubTask>();
+        public List<YourTaskEvent> historyDetails = new List<YourTaskEvent>();
     }
 
-    public class yourSubTask
+    public class YourSubTask
     {
         public string subtaskid { get; set; }
         public string assignee { get; set; }
@@ -913,7 +913,7 @@ namespace Kanbanize
         public string completiondate { get; set; }
     }
 
-    public class yourTaskEvent
+    public class YourTaskEvent
     {
         public string eventtype { get; set; }
         public string historyevent { get; set; }
