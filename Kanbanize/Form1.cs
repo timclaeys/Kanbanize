@@ -61,7 +61,7 @@ namespace Kanbanize
 
         #region methods
 
-        private void findTasksForDate(DateTime start, DateTime stop)//find the tasks in progress between the start and stop date
+        private void FindTasksForDate(DateTime start, DateTime stop)//find the tasks in progress between the start and stop date
         {
             foundTasks = foundTasks.OrderBy(o => o.assignee).ToList();                                          //order the tasks according to the assignee
             int tasksInProgress = 0;                                                                            //not used now, can be used later on
@@ -795,7 +795,7 @@ namespace Kanbanize
             }
             worker.ReportProgress(100);
 
-            findTasksForDate(start, stop);
+            FindTasksForDate(start, stop);
         }
 
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)//the progress is updated
