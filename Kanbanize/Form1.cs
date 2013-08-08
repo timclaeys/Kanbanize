@@ -252,20 +252,6 @@ namespace Kanbanize
                             yourSubTaskBuf.title = subtasks.title;
                             yourTaskBuf.subtaskList.Add(yourSubTaskBuf);
                         }
-                        #region Decomment if task history must be loaded at login
-                        /*historyDetails = kanbanizeApiObj.getTaskDetails(boardId.id, taken.taskid); 
-                        foreach (taskEvent taskEventBuf in historyDetails.eventList)
-                        {
-                            yourTaskEvent yourTaskEventBuf = new yourTaskEvent();
-                            yourTaskEventBuf.author = taskEventBuf.author;
-                            yourTaskEventBuf.details = taskEventBuf.details;
-                            yourTaskEventBuf.entrydate = taskEventBuf.entrydate;
-                            yourTaskEventBuf.eventtype = taskEventBuf.eventtype;
-                            yourTaskEventBuf.historyevent = taskEventBuf.historyevent;
-                            yourTaskEventBuf.historyid = taskEventBuf.historyid;
-                            yourTaskBuf.historyDetails.Add(yourTaskEventBuf);
-                        }*/
-                        #endregion
                         yourBoardBuf.taskList.Add(yourTaskBuf);                                       
                         numberTasks++;
                     }
