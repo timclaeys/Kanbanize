@@ -51,7 +51,7 @@ namespace Kanbanize
         #endregion
 
         #region connections to api
-        public login getLogin()
+        public Login getLogin()
         {
             string adres = KanbanAdresLogin + HttpUtility.UrlEncode(email) + "/pass/" + password;
             
@@ -67,15 +67,15 @@ namespace Kanbanize
                 content = content.Replace("<xml>", "<login>");
                 content = content.Replace("</xml>", "</login>");
 
-                XmlSerializer deserializer = new XmlSerializer(typeof(login));                          //deserialize the content to login object
+                XmlSerializer deserializer = new XmlSerializer(typeof(Login));                          //deserialize the content to login object
                 object obj = deserializer.Deserialize(stringToStream(content));
-                login XmlData = (login)obj;
+                Login XmlData = (Login)obj;
                 return XmlData;
             }
 
         }
 
-        public projects getProjectsAndBoards()
+        public Projects getProjectsAndBoards()
         {
             IRestResponse response = getResponse(KanbanAdresProjAndBoards);
 
@@ -145,13 +145,13 @@ namespace Kanbanize
                     replacement += content.Substring(i, 1);
             }
 
-            XmlSerializer deserializer = new XmlSerializer(typeof(projects));                          //deserialize the content to login object
+            XmlSerializer deserializer = new XmlSerializer(typeof(Projects));                          //deserialize the content to login object
             object obj = deserializer.Deserialize(stringToStream(replacement));
-            projects XmlData = (projects)obj;
+            Projects XmlData = (Projects)obj;
             return XmlData;
         }
 
-        public board getTasks(string boardId, bool enableSubTasks)
+        public Board getTasks(string boardId, bool enableSubTasks)
         {
             string adres = KanbanAdresGetAllTasks + "boardid/" + boardId;
             if (enableSubTasks )
@@ -224,7 +224,7 @@ namespace Kanbanize
                     replacement += content.Substring(i, 1);
             }
 
-            XmlSerializer deserializer = new XmlSerializer(typeof(board ));                          //deserialize the content to login object
+            XmlSerializer deserializer = new XmlSerializer(typeof(Board ));                          //deserialize the content to login object
             object obj = null;
             try
             {
@@ -232,12 +232,12 @@ namespace Kanbanize
             }
             catch
             {
-                obj = new board();
+                obj = new Board();
             }
-            board XmlData = (board)obj;
+            Board XmlData = (Board)obj;
             return XmlData;
         }
-        public board getTasks(string boardId, bool enableSubTasks, string fromDate, string toDate)
+        public Board getTasks(string boardId, bool enableSubTasks, string fromDate, string toDate)
         {
             string adres = KanbanAdresGetAllTasks + "boardid/" + boardId;
             if (enableSubTasks)
@@ -314,7 +314,7 @@ namespace Kanbanize
                     replacement += content.Substring(i, 1);
             }
 
-            XmlSerializer deserializer = new XmlSerializer(typeof(board));                          //deserialize the content to login object
+            XmlSerializer deserializer = new XmlSerializer(typeof(Board));                          //deserialize the content to login object
             object obj = null;
             try
             {
@@ -322,13 +322,13 @@ namespace Kanbanize
             }
             catch
             {
-                obj = new board();
+                obj = new Board();
             }
-            board XmlData = (board)obj;
+            Board XmlData = (Board)obj;
             return XmlData;
         }
 
-        public historydetails getTaskDetails(String BoardId,String TaskId)
+        public HistoryDetails getTaskDetails(String BoardId,String TaskId)
         {
             string adres = kanbanAdresGetTaskDetails + "/boardid/" + BoardId + "/taskid/" + TaskId + "/history/yes";
             IRestResponse response = getResponse(adres);
@@ -373,9 +373,9 @@ namespace Kanbanize
                     }
                 }
             }
-            XmlSerializer deserializer = new XmlSerializer(typeof(historydetails));                          //deserialize the content to login object
+            XmlSerializer deserializer = new XmlSerializer(typeof(HistoryDetails));                          //deserialize the content to login object
             object obj = obj = deserializer.Deserialize(stringToStream(replacement));           
-            historydetails XmlData = (historydetails)obj;
+            HistoryDetails XmlData = (HistoryDetails)obj;
 
 
             
@@ -416,7 +416,7 @@ namespace Kanbanize
 
     #region Classes related to xml input from api
     #region login
-    public class login
+    public class Login
     {
         public string email { get; set; }
         public string username { get; set; }
@@ -428,13 +428,13 @@ namespace Kanbanize
     }
     #endregion
     #region board
-    public class board
+    public class Board
     {
         [XmlElement("task")]
-        public List<task> tasklist = new List<task>();
+        public List<Task> tasklist = new List<Task>();
     }
 
-    public class task
+    public class Task
     {
         public string taskid { get; set; }
         public string position { get; set; }
@@ -461,10 +461,10 @@ namespace Kanbanize
         public string columnpath { get; set; }
         public string loggedtime { get; set; }
         [XmlElement("subtask")]
-        public List<subtask> subtasklist= new List<subtask>();
+        public List<SubTask> subtasklist= new List<SubTask>();
     }
 
-    public class subtask
+    public class SubTask
     {
         public string subtaskid { get; set; }
         public string assignee { get; set; }
@@ -473,35 +473,35 @@ namespace Kanbanize
     }
     #endregion
     #region projects
-    public class projects
+    public class Projects
     {
         [XmlElement("project")]
-        public List<project> projectlist = new List<project>();
+        public List<Project> projectlist = new List<Project>();
         
     }
 
-    public class project
+    public class Project
     {
         public string name { get; set; }
         public string id { get; set; }
         [XmlElement("boardid")]
-        public List<boardid> boardlist = new List<boardid>();
+        public List<Boardid> boardlist = new List<Boardid>();
     }
 
-    public class boardid 
+    public class Boardid 
     {
         public string name { get; set; }
         public string id { get; set; }
     }
     #endregion
     #region history
-    public class historydetails
+    public class HistoryDetails
     {
         [XmlElement("taskEvent")]
-        public List<taskEvent> eventList = new List<taskEvent>();
+        public List<TaskEvent> eventList = new List<TaskEvent>();
     }
 
-    public class taskEvent
+    public class TaskEvent
     {
         public string eventtype { get; set; }
         public string historyevent { get; set; }

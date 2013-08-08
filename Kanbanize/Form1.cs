@@ -34,10 +34,10 @@ namespace Kanbanize
         #region objects
         KanbanizeConnect kanbanizeApiObj;                                           //connection to the kanbanize api handler
                 
-        login yourLogin;                                                            //object of kanbanize api handler
-        projects projecten;                                                         //object of kanbanize api handler
-        board Boards;                                                               //object of kanbanize api handler
-        historydetails historyDetails;                                              //object of kanbanize api handler                      
+        Login yourLogin;                                                            //object of kanbanize api handler
+        Projects projecten;                                                         //object of kanbanize api handler
+        Board Boards;                                                               //object of kanbanize api handler
+        HistoryDetails historyDetails;                                              //object of kanbanize api handler                      
 
         yourProjects allProjects = new yourProjects();                              //all of the projects,board,tasks
         List<yourTask> foundTasks = new List<yourTask>();                           //tasks that have the asked_name or a part of it in the assignees name
@@ -205,18 +205,18 @@ namespace Kanbanize
         private void getAllInfo()//download all of the projects, boards and tasks from the website "kanbanize.com" via the api handler
         {
             projecten = kanbanizeApiObj.getProjectsAndBoards();                                         //download the list of projects and boards
-            foreach (project Project in projecten.projectlist)                                          //for every project in this list
+            foreach (Project Project in projecten.projectlist)                                          //for every project in this list
             {
                 yourProject yourProjectBuf = new yourProject();                                         
                 yourProjectBuf.name = Project.name;
                 yourProjectBuf.id = Project.id;
-                foreach (boardid boardId in Project.boardlist)                                          //for every board in this list
+                foreach (Boardid boardId in Project.boardlist)                                          //for every board in this list
                 {
                     yourBoard yourBoardBuf = new yourBoard();
                     yourBoardBuf.name = boardId.name;
                     yourBoardBuf.id = boardId.id;
                     Boards = kanbanizeApiObj.getTasks(boardId.id, true);                                //download all the tasks for a given board
-                    foreach (task taken in Boards.tasklist)                                             //for every task in this board
+                    foreach (Task taken in Boards.tasklist)                                             //for every task in this board
                     {
                         yourTask yourTaskBuf = new yourTask();
                         yourTaskBuf.taskid = taken.taskid;
@@ -243,7 +243,7 @@ namespace Kanbanize
                         yourTaskBuf.lanename = taken.lanename;
                         yourTaskBuf.columnpath = taken.columnpath;
                         yourTaskBuf.loggedtime = taken.loggedtime;
-                        foreach (subtask subtasks in taken.subtasklist)                               //for every subtask in the current task
+                        foreach (SubTask subtasks in taken.subtasklist)                               //for every subtask in the current task
                         {
                             yourSubTask yourSubTaskBuf = new yourSubTask();
                             yourSubTaskBuf.assignee = subtasks.assignee;
@@ -649,7 +649,7 @@ namespace Kanbanize
                         if (yourTaskBuf.taskid == currentTaksId)
                         {
                             historyDetails = kanbanizeApiObj.getTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
-                            foreach (taskEvent taskEventBuf in historyDetails.eventList)
+                            foreach (TaskEvent taskEventBuf in historyDetails.eventList)
                             {
                                 yourTaskEvent yourTaskEventBuf = new yourTaskEvent();
                                 yourTaskEventBuf.author = taskEventBuf.author;
@@ -763,7 +763,7 @@ namespace Kanbanize
                             if (yourTaskBuf.historyDetails.Count == 0)                                                  //if the task events havent been downloaded yet.
                             {
                                 historyDetails = kanbanizeApiObj.getTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
-                                foreach (taskEvent taskEventBuf in historyDetails.eventList)
+                                foreach (TaskEvent taskEventBuf in historyDetails.eventList)
                                 {
                                     yourTaskEvent yourTaskEventBuf = new yourTaskEvent();
                                     yourTaskEventBuf.author = taskEventBuf.author;
