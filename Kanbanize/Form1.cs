@@ -22,8 +22,8 @@ namespace Kanbanize
         #region variables
         private string email = "";   
         private string password = "";
-        //current row in the excell file 
-        int currentRow = 2;                     
+
+        int currentRow = 2;                             //current row in the excell file         
         private string currentProjectId = "";   
         private string currentBoardId = "";
         private string currentTaksId = "";
