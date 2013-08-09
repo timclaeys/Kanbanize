@@ -99,7 +99,7 @@ namespace Kanbanize
                         {
                             if (test <= stop)                                                                   //task is done before the stop time                               
                             {
-                                writeLineToExcel(yourTaskBuf);                                                  //write the property's to excel
+                                WriteLineToExcel(yourTaskBuf);                                                  //write the property's to excel
                                 tasksInProgress++;
                                 break;
                             }
@@ -111,7 +111,7 @@ namespace Kanbanize
 
                         if ((searchForStart) && (yourTaskEventBuf.historyevent == "Task moved") && (yourTaskEventBuf.details.Contains("In Progress")) && (test <= stop)) //task is started before the stop time
                         {
-                            writeLineToExcel(yourTaskBuf);                                                      //write the property's to excel
+                            WriteLineToExcel(yourTaskBuf);                                                      //write the property's to excel
                             tasksInProgress++;
                             break;
                         }
@@ -121,7 +121,7 @@ namespace Kanbanize
                 {
                     if (yourTaskBuf.historyDetails.Count == 1)                                                  //if there is only 1 task event and the task is in progress it is created in the "In Progress" Column
                     {
-                        writeLineToExcel(yourTaskBuf);                                                          //write the property's to excel
+                        WriteLineToExcel(yourTaskBuf);                                                          //write the property's to excel
                         tasksInProgress++;
                     }
                     else
@@ -133,7 +133,7 @@ namespace Kanbanize
                                 DateTime test = Convert.ToDateTime(yourTaskEventBuf.entrydate);                 //the entrydate for the current taskevent
                                 if((yourTaskEventBuf.historyevent == "Task moved")&&(start <= test)&&( test <= stop)&&(yourTaskEventBuf.details.Contains("In Progress")))//als in progres was en naar backlog gestuurd geweest binnen de periode.
                                 {
-                                    writeLineToExcel(yourTaskBuf);                                              //write the property's to excel
+                                    WriteLineToExcel(yourTaskBuf);                                              //write the property's to excel
                                     tasksInProgress++;
                                     break;
                                 }
@@ -146,7 +146,7 @@ namespace Kanbanize
                                 DateTime test = Convert.ToDateTime(yourTaskEventBuf.entrydate);                 //the entrydate for the current taskevent
                                 if ((yourTaskEventBuf.historyevent == "Task moved") && (test <= stop))          // de taak is voor de stop tijd gemoved naar in progress
                                 {
-                                    writeLineToExcel(yourTaskBuf);                                              //write the property's to excel
+                                    WriteLineToExcel(yourTaskBuf);                                              //write the property's to excel
                                     tasksInProgress++;
                                     break;
                                 }
@@ -159,7 +159,7 @@ namespace Kanbanize
             }
             
         }           
-        private void writeLineToExcel(YourTask yourTaskBuffer)//write a line to the current excell file with the property's of a task
+        private void WriteLineToExcel(YourTask yourTaskBuffer)//write a line to the current excell file with the property's of a task
         {
             xlWorkSheet.Cells[currentRow, 1] = yourTaskBuffer.assignee;                             //write the tasks property's to the excel file
             xlWorkSheet.Cells[currentRow, 2] = yourTaskBuffer.title;
@@ -202,9 +202,9 @@ namespace Kanbanize
                 }
             }
         }                 
-        private void getAllInfo()//download all of the projects, boards and tasks from the website "kanbanize.com" via the api handler
+        private void GetAllInfo()//download all of the projects, boards and tasks from the website "kanbanize.com" via the api handler
         {
-            projecten = kanbanizeApiObj.getProjectsAndBoards();                                         //download the list of projects and boards
+            projecten = kanbanizeApiObj.GetProjectsAndBoards();                                         //download the list of projects and boards
             foreach (Project Project in projecten.projectlist)                                          //for every project in this list
             {
                 YourProject yourProjectBuf = new YourProject();                                         
@@ -215,7 +215,7 @@ namespace Kanbanize
                     YourBoard yourBoardBuf = new YourBoard();
                     yourBoardBuf.name = boardId.name;
                     yourBoardBuf.id = boardId.id;
-                    Boards = kanbanizeApiObj.getTasks(boardId.id, true);                                //download all the tasks for a given board
+                    Boards = kanbanizeApiObj.GetTasks(boardId.id, true);                                //download all the tasks for a given board
                     foreach (Task taken in Boards.tasklist)                                             //for every task in this board
                     {
                         YourTask yourTaskBuf = new YourTask();
@@ -260,7 +260,7 @@ namespace Kanbanize
                 allProjects.yourProjectList.Add(yourProjectBuf);                                    //add  everything to "allProjects"
             }
         }   
-        private void releaseObject(object obj)//release an object(used for the excel objects)
+        private void ReleaseObject(object obj)//release an object(used for the excel objects)
         {
             try
             {
@@ -306,14 +306,14 @@ namespace Kanbanize
         }
 
         #region populate gui
-        private void populateLogin()//populate the login labels
+        private void PopulateLogin()//populate the login labels
         {
             labelUsername.Text = "Username: " + yourLogin.username;
             labelRealName.Text = "Realname: " + yourLogin.realname;
             labelCompanyname.Text = "Companyname: " + yourLogin.companyname;
             labelTimezone.Text = "Timezone: " + yourLogin.timeZone;
         }
-        private void populateTreeView()//populate the treeview
+        private void PopulateTreeView()//populate the treeview
         {
             foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                                                                                         //every project (level 1)
             {
@@ -329,19 +329,19 @@ namespace Kanbanize
                 }
             }
         }
-        private void populateYourProject(YourProject yourProjectBuf, bool clearLabels)//populate project labels
+        private void PopulateYourProject(YourProject yourProjectBuf, bool clearLabels)//populate project labels
         {
             labelProjectName.Text = (clearLabels) ? "Project name: " : "Project name: " + yourProjectBuf.name;
             labelProjectId.Text = (clearLabels) ? "Project id: " : "Project id: " + yourProjectBuf.id;
             button2.Enabled = false;
         }
-        private void populateYourBoard(YourBoard yourBoardBuf, bool clearLabels)//populate board labels
+        private void PopulateYourBoard(YourBoard yourBoardBuf, bool clearLabels)//populate board labels
         {
             labelBoardName.Text = (clearLabels) ? "Board name: " : "Board name: " + yourBoardBuf.name;
             labelBoardId.Text = (clearLabels) ? "Board id: " : "Board id: " + yourBoardBuf.id;
 
         }
-        private void populateYourTask(YourTask yourTaskBuf, bool clearLabels)//populate task labels
+        private void PopulateYourTask(YourTask yourTaskBuf, bool clearLabels)//populate task labels
         {
             labelTaskTitle.Text = (clearLabels) ? "Task title: " : "Task title: " + yourTaskBuf.title;
             labelTaskId.Text = (clearLabels) ? "Task id: " : "Task id: " + yourTaskBuf.taskid;
@@ -397,14 +397,14 @@ namespace Kanbanize
                 button2.Enabled = true;
             }
         }
-        private void populateYourSubTask(YourSubTask yourSubTaskBuf, bool clearLabels)//populate subtasks
+        private void PopulateYourSubTask(YourSubTask yourSubTaskBuf, bool clearLabels)//populate subtasks
         {
             labelSubtaskTitle.Text = (clearLabels) ? "Subtask title: " : "Subtask title: " + yourSubTaskBuf.title;
             labelSubtaskId.Text = (clearLabels) ? "Subtask id: " : "Subtask id: " + yourSubTaskBuf.subtaskid;
             labelSubTaskAssignee.Text = (clearLabels) ? "Assignee: " : "Assignee: " + yourSubTaskBuf.assignee;
             labelSubTaskCompletionDate.Text = (clearLabels) ? "Completion date: " : "Completion date: " + yourSubTaskBuf.completiondate;
         }
-        private void populateYourTaskEvents(YourTaskEvent yourTaskEventBuf, bool clearlabels)//popullate taskevents
+        private void PopulateYourTaskEvents(YourTaskEvent yourTaskEventBuf, bool clearlabels)//popullate taskevents
         {
             labelHistoryAuthor.Text = (clearlabels) ? "Author: " : "Author: " + yourTaskEventBuf.author;
             labelHistoryDetails.Text = (clearlabels) ? "Details: " : "Details: " + yourTaskEventBuf.details;
@@ -413,7 +413,7 @@ namespace Kanbanize
             labelHistoryId.Text = (clearlabels) ? "History id: " : "Hystory id: " + yourTaskEventBuf.historyid;
             labelHistoryEvent.Text = (clearlabels)? "History event: " : "history even:" +  yourTaskEventBuf.historyevent;
         }
-        private void enableSearching()//enable the searchcontrols and assign the autocomplete list
+        private void EnableSearching()//enable the searchcontrols and assign the autocomplete list
         {
             textBox2.Enabled = true;
             button1.Enabled = true;
@@ -468,7 +468,7 @@ namespace Kanbanize
         
         #region events
         #region treeviews
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             TreeNode selectedNode = treeView1.SelectedNode;                                                     //get the selectednode
             switch (selectedNode.Level)                                                                         //what is the level of the selected level
@@ -478,14 +478,14 @@ namespace Kanbanize
                     {
                         if (selectedNode.Name.Substring(8, selectedNode.Name.Length - 8) == yourProjectBuf.id)
                         {
-                            populateYourProject(yourProjectBuf, false);                                         //populate the project labels
+                            PopulateYourProject(yourProjectBuf, false);                                         //populate the project labels
 
                             YourBoard yourBoardDummy = new YourBoard();
                             YourTask yourTaskDummy = new YourTask();
                             YourSubTask yourSubTaskDummy = new YourSubTask();
-                            populateYourBoard(yourBoardDummy, true);                                            //clear the board labels
-                            populateYourTask(yourTaskDummy, true);                                              //clear the task labels
-                            populateYourSubTask(yourSubTaskDummy, true);                                        //clear the subtask labels
+                            PopulateYourBoard(yourBoardDummy, true);                                            //clear the board labels
+                            PopulateYourTask(yourTaskDummy, true);                                              //clear the task labels
+                            PopulateYourSubTask(yourSubTaskDummy, true);                                        //clear the subtask labels
 
                             currentProjectId = yourProjectBuf.id;                                               //save the project id
                             currentBoardId = "";
@@ -503,13 +503,13 @@ namespace Kanbanize
                         {
                             if (selectedNode.Name.Substring(6, selectedNode.Name.Length - 6) == yourBoardBuf.id)
                             {
-                                populateYourProject(yourProjectBuf, false);                                     //populate the project labels
-                                populateYourBoard(yourBoardBuf, false);                                         //project the board labels
+                                PopulateYourProject(yourProjectBuf, false);                                     //populate the project labels
+                                PopulateYourBoard(yourBoardBuf, false);                                         //project the board labels
 
                                 YourTask yourTaskDummy = new YourTask();
                                 YourSubTask yourSubTaskDummy = new YourSubTask();
-                                populateYourTask(yourTaskDummy, true);                                          //clear the task labels
-                                populateYourSubTask(yourSubTaskDummy, true);                                    //clear the subtask labels
+                                PopulateYourTask(yourTaskDummy, true);                                          //clear the task labels
+                                PopulateYourSubTask(yourSubTaskDummy, true);                                    //clear the subtask labels
 
                                 currentProjectId = yourProjectBuf.id;                                           //save the project id        
                                 currentBoardId = yourBoardBuf.id;                                               //save the board id
@@ -532,13 +532,13 @@ namespace Kanbanize
                             {
                                 if (selectedNode.Name.Substring(5, selectedNode.Name.Length - 5) == yourTaskBuf.taskid)
                                 {
-                                    populateYourProject(yourProjectBuf, false);                                 //populate project labels
-                                    populateYourBoard(yourBoardBuf, false);                                     //populate board labels
+                                    PopulateYourProject(yourProjectBuf, false);                                 //populate project labels
+                                    PopulateYourBoard(yourBoardBuf, false);                                     //populate board labels
                                     button2.Enabled = false;
-                                    populateYourTask(yourTaskBuf, false);                                       //populate task labels
+                                    PopulateYourTask(yourTaskBuf, false);                                       //populate task labels
 
                                     YourSubTask yourSubTaskDummy = new YourSubTask();
-                                    populateYourSubTask(yourSubTaskDummy, true);                                //clear the subtask labels
+                                    PopulateYourSubTask(yourSubTaskDummy, true);                                //clear the subtask labels
 
                                     currentProjectId = yourProjectBuf.id;                                       //save the project id
                                     currentBoardId = yourBoardBuf.id;                                           //save te board id
@@ -556,16 +556,16 @@ namespace Kanbanize
         }
         #endregion
         #region textboxes
-        private void textBoxPassword_KeyDown(object sender, KeyEventArgs e)
+        private void TextBoxPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                buttonLogin_Click((object)sender, (EventArgs)e);
+                ButtonLogin_Click((object)sender, (EventArgs)e);
             }
         }
         #endregion
         #region listboxes
-        private void listBoxSubTasks_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBoxSubTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
             foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
             {
@@ -577,7 +577,7 @@ namespace Kanbanize
                         {
                             if (listBoxSubTasks.SelectedItem.ToString() == yourSubTaskBuf.title)    
                             {
-                                populateYourSubTask(yourSubTaskBuf, false);                         //populate subtask labels
+                                PopulateYourSubTask(yourSubTaskBuf, false);                         //populate subtask labels
                                 goto BreakLoops3;
                             }
                         }
@@ -586,13 +586,13 @@ namespace Kanbanize
             }
         BreakLoops3: ;
         }
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
         #endregion
         #region buttons
-        private void button1_Click(object sender, EventArgs e)//search button is pressed
+        private void Button1_Click(object sender, EventArgs e)//search button is pressed
         {
             #region preparing
             asked_name = textBox2.Text;                                                             //search term
@@ -627,7 +627,7 @@ namespace Kanbanize
 
 
         }
-        private void buttonLogin_Click(object sender, EventArgs e)// login button is pressed
+        private void ButtonLogin_Click(object sender, EventArgs e)// login button is pressed
         {
             toolStripStatusLabel1.Text = "Asking for Api key and login info";
             email = textBoxEmail.Text;
@@ -638,7 +638,7 @@ namespace Kanbanize
                                                                         //this downloadis executed in a backgroundworker
                                                                         // because the form is not responsive when downloading when we dont use another thread. like the backgroundworker
         }
-        private void button2_Click(object sender, EventArgs e)//download task history
+        private void Button2_Click(object sender, EventArgs e)//download task history
         {
             foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
             {
@@ -648,7 +648,7 @@ namespace Kanbanize
                     {
                         if (yourTaskBuf.taskid == currentTaksId)
                         {
-                            historyDetails = kanbanizeApiObj.getTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
+                            historyDetails = kanbanizeApiObj.GetTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
                             foreach (TaskEvent taskEventBuf in historyDetails.eventList)
                             {
                                 YourTaskEvent yourTaskEventBuf = new YourTaskEvent();
@@ -660,9 +660,9 @@ namespace Kanbanize
                                 yourTaskEventBuf.historyid = taskEventBuf.historyid;
                                 yourTaskBuf.historyDetails.Add(yourTaskEventBuf);
                             }
-                            populateYourProject(yourProjectBuf, false);
-                            populateYourBoard(yourBoardBuf, false);
-                            populateYourTask(yourTaskBuf, false);
+                            PopulateYourProject(yourProjectBuf, false);
+                            PopulateYourBoard(yourBoardBuf, false);
+                            PopulateYourTask(yourTaskBuf, false);
                             button2.Enabled = false;
                             goto breakloop4;
                         }
@@ -679,22 +679,22 @@ namespace Kanbanize
             #region close Excel                                     
             xlWorkBook.Close(true, misValue, misValue);                     
             xlApp.Quit();
-            releaseObject(xlWorkSheet);
-            releaseObject(xlWorkBook);
-            releaseObject(xlApp);
+            ReleaseObject(xlWorkSheet);
+            ReleaseObject(xlWorkBook);
+            ReleaseObject(xlApp);
             MessageBox.Show("it could be that an excel process is still running, check your task manager", "warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             #endregion
         }
         #endregion
         #region toolstrip
-        private void toolStripStatusLabel1_TextChanged(object sender, EventArgs e)
+        private void ToolStripStatusLabel1_TextChanged(object sender, EventArgs e)
         {
             //when the label gets a new text it must be visible on the gui immediatly
             this.Refresh();
         }
         #endregion
         #region checckboxes
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             //if the checkbox "verybody" is checked no search term can be entered
             if (checkBox1.Checked)
@@ -706,14 +706,14 @@ namespace Kanbanize
         #endregion
 
         #region BackGroundWorker1: Get login and all tasks
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)                             //the work that needs to be done 
+        private void BackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)                             //the work that needs to be done 
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            yourLogin = kanbanizeApiObj.getLogin();                                                         //download the api key and other login info
+            yourLogin = kanbanizeApiObj.GetLogin();                                                         //download the api key and other login info
             if (yourLogin != null)
             {
                 kanbanizeApiObj.apikey = yourLogin.apikey;                                                  //sync apikey between api handler and this class
-                getAllInfo();                                                                               //download all of the projects,boards and tasks
+                GetAllInfo();                                                                               //download all of the projects,boards and tasks
                 e.Result = "OK";                                                                            //the result is good
 
             }
@@ -723,7 +723,7 @@ namespace Kanbanize
             }
 
         }
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)     //the backgroundworker is done
+        private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)     //the backgroundworker is done
         {
             if (e.Result != "OK")                                                                           //if the result si different from ok
             {
@@ -732,17 +732,17 @@ namespace Kanbanize
             }
             else
             {
-                populateLogin();                                                                            //populate the login labels
-                populateTreeView();                                                                         //populate the treeview
-                populateYourProject(allProjects.yourProjectList[0], false);                                 //select the first project and populate the project labels
-                enableSearching();
+                PopulateLogin();                                                                            //populate the login labels
+                PopulateTreeView();                                                                         //populate the treeview
+                PopulateYourProject(allProjects.yourProjectList[0], false);                                 //select the first project and populate the project labels
+                EnableSearching();
                 toolStripStatusLabel1.Text = "Succesfully logged in and received all tasks";
             }
         }
         #endregion
         
         #region BackGroundWorker2: Get all history details and search
-        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        private void BackgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
@@ -762,7 +762,7 @@ namespace Kanbanize
                         {
                             if (yourTaskBuf.historyDetails.Count == 0)                                                  //if the task events havent been downloaded yet.
                             {
-                                historyDetails = kanbanizeApiObj.getTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
+                                historyDetails = kanbanizeApiObj.GetTaskDetails(yourBoardBuf.id, yourTaskBuf.taskid);   //download the task events 
                                 foreach (TaskEvent taskEventBuf in historyDetails.eventList)
                                 {
                                     YourTaskEvent yourTaskEventBuf = new YourTaskEvent();
@@ -798,7 +798,7 @@ namespace Kanbanize
             FindTasksForDate(start, stop);
         }
 
-        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)//the progress is updated
+        private void BackgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)//the progress is updated
         {
             if (e.ProgressPercentage == 100)                                                                        //everything is downloaded
             {
@@ -814,7 +814,7 @@ namespace Kanbanize
 
         }
 
-        private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)//everything is downloaded and the excel file is made
+        private void BackgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)//everything is downloaded and the excel file is made
         {
             SaveToExcel();                                          //save the excel file
             toolStripStatusLabel1.Text = "written to excell";
@@ -822,7 +822,7 @@ namespace Kanbanize
 
         #endregion
 
-        private void listBox1_SelectedValueChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedValueChanged(object sender, EventArgs e)
         {
             ListBox test = (ListBox)sender;
             foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                     //find subtask
@@ -836,7 +836,7 @@ namespace Kanbanize
                             
                             if (test.SelectedItem.ToString() == (yourTaskEventBuf.historyevent + " " + yourTaskEventBuf.details))
                             {
-                                populateYourTaskEvents(yourTaskEventBuf, false);
+                                PopulateYourTaskEvents(yourTaskEventBuf, false);
                                 goto BreakLoops5;
                             }
                         }

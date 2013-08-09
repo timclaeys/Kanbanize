@@ -143,7 +143,7 @@
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(139, 20);
             this.textBoxPassword.TabIndex = 3;
-            this.textBoxPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPassword_KeyDown);
+            this.textBoxPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPassword_KeyDown);
             // 
             // buttonLogin
             // 
@@ -153,7 +153,7 @@
             this.buttonLogin.TabIndex = 4;
             this.buttonLogin.Text = "Login";
             this.buttonLogin.UseVisualStyleBackColor = true;
-            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
+            this.buttonLogin.Click += new System.EventHandler(this.ButtonLogin_Click);
             // 
             // groupBox1
             // 
@@ -215,7 +215,7 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(238, 691);
             this.treeView1.TabIndex = 6;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
             // 
             // label3
             // 
@@ -325,8 +325,8 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(261, 394);
             this.listBox1.TabIndex = 25;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-            this.listBox1.SelectedValueChanged += new System.EventHandler(this.listBox1_SelectedValueChanged);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
+            this.listBox1.SelectedValueChanged += new System.EventHandler(this.ListBox1_SelectedValueChanged);
             // 
             // groupBox3
             // 
@@ -413,7 +413,7 @@
             this.button2.TabIndex = 29;
             this.button2.Text = "Download task history";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // labelSubTaskCompletionDate
             // 
@@ -458,7 +458,7 @@
             this.listBoxSubTasks.Name = "listBoxSubTasks";
             this.listBoxSubTasks.Size = new System.Drawing.Size(214, 225);
             this.listBoxSubTasks.TabIndex = 24;
-            this.listBoxSubTasks.SelectedIndexChanged += new System.EventHandler(this.listBoxSubTasks_SelectedIndexChanged);
+            this.listBoxSubTasks.SelectedIndexChanged += new System.EventHandler(this.ListBoxSubTasks_SelectedIndexChanged);
             // 
             // labelTaskLoggedTime
             // 
@@ -720,7 +720,7 @@
             this.button1.TabIndex = 9;
             this.button1.Text = "Search";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // textBox2
             // 
@@ -782,7 +782,7 @@
             this.checkBox1.TabIndex = 18;
             this.checkBox1.Text = "everybody";
             this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // statusStrip1
             // 
@@ -805,19 +805,19 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(83, 17);
             this.toolStripStatusLabel1.Text = "doing nothing";
-            this.toolStripStatusLabel1.TextChanged += new System.EventHandler(this.toolStripStatusLabel1_TextChanged);
+            this.toolStripStatusLabel1.TextChanged += new System.EventHandler(this.ToolStripStatusLabel1_TextChanged);
             // 
             // backgroundWorker1
             // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker1_DoWork);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker1_RunWorkerCompleted);
             // 
             // backgroundWorker2
             // 
             this.backgroundWorker2.WorkerReportsProgress = true;
-            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
-            this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
-            this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
+            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker2_DoWork);
+            this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker2_ProgressChanged);
+            this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker2_RunWorkerCompleted);
             // 
             // Form1
             // 

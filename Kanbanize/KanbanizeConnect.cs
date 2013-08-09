@@ -51,11 +51,11 @@ namespace Kanbanize
         #endregion
 
         #region connections to api
-        public Login getLogin()
+        public Login GetLogin()
         {
             string adres = KanbanAdresLogin + HttpUtility.UrlEncode(email) + "/pass/" + password;
             
-            IRestResponse response = getResponseLogin(adres);                                    //execute the request
+            IRestResponse response = GetResponseLogin(adres);                                    //execute the request
 
             if(response.Content.Contains("Invalid"))
             {
@@ -68,16 +68,16 @@ namespace Kanbanize
                 content = content.Replace("</xml>", "</login>");
 
                 XmlSerializer deserializer = new XmlSerializer(typeof(Login));                          //deserialize the content to login object
-                object obj = deserializer.Deserialize(stringToStream(content));
+                object obj = deserializer.Deserialize(StringToStream(content));
                 Login XmlData = (Login)obj;
                 return XmlData;
             }
 
         }
 
-        public Projects getProjectsAndBoards()
+        public Projects GetProjectsAndBoards()
         {
-            IRestResponse response = getResponse(KanbanAdresProjAndBoards);
+            IRestResponse response = GetResponse(KanbanAdresProjAndBoards);
 
             string content = response.Content;
             content = content.Replace("<xml>", "");
@@ -146,17 +146,17 @@ namespace Kanbanize
             }
 
             XmlSerializer deserializer = new XmlSerializer(typeof(Projects));                          //deserialize the content to login object
-            object obj = deserializer.Deserialize(stringToStream(replacement));
+            object obj = deserializer.Deserialize(StringToStream(replacement));
             Projects XmlData = (Projects)obj;
             return XmlData;
         }
 
-        public Board getTasks(string boardId, bool enableSubTasks)
+        public Board GetTasks(string boardId, bool enableSubTasks)
         {
             string adres = KanbanAdresGetAllTasks + "boardid/" + boardId;
             if (enableSubTasks )
                 adres += "/subtasks/yes";
-            IRestResponse response = getResponse(adres);
+            IRestResponse response = GetResponse(adres);
 
             string content = response.Content;                                                      //change the content of the respons
             content = content.Replace("<xml>", "<board>");
@@ -228,7 +228,7 @@ namespace Kanbanize
             object obj = null;
             try
             {
-                obj = deserializer.Deserialize(stringToStream(replacement));
+                obj = deserializer.Deserialize(StringToStream(replacement));
             }
             catch
             {
@@ -237,7 +237,7 @@ namespace Kanbanize
             Board XmlData = (Board)obj;
             return XmlData;
         }
-        public Board getTasks(string boardId, bool enableSubTasks, string fromDate, string toDate)
+        public Board GetTasks(string boardId, bool enableSubTasks, string fromDate, string toDate)
         {
             string adres = KanbanAdresGetAllTasks + "boardid/" + boardId;
             if (enableSubTasks)
@@ -246,7 +246,7 @@ namespace Kanbanize
             adres += "/fromdate/" + fromDate;
             adres += "/todate/" + toDate;
 
-            IRestResponse response = getResponse(adres);
+            IRestResponse response = GetResponse(adres);
 
             string content = response.Content;                                                      //change the content of the respons
             content = content.Replace("<xml>", "<board>");
@@ -318,7 +318,7 @@ namespace Kanbanize
             object obj = null;
             try
             {
-                obj = deserializer.Deserialize(stringToStream(replacement));
+                obj = deserializer.Deserialize(StringToStream(replacement));
             }
             catch
             {
@@ -328,10 +328,10 @@ namespace Kanbanize
             return XmlData;
         }
 
-        public HistoryDetails getTaskDetails(String BoardId,String TaskId)
+        public HistoryDetails GetTaskDetails(String BoardId,String TaskId)
         {
             string adres = kanbanAdresGetTaskDetails + "/boardid/" + BoardId + "/taskid/" + TaskId + "/history/yes";
-            IRestResponse response = getResponse(adres);
+            IRestResponse response = GetResponse(adres);
             string content = response.Content;
             string replacement = "<?xml version=\"1.0\" encoding=\"utf-8\" ?> ";
             bool inHistory = false;
@@ -374,7 +374,7 @@ namespace Kanbanize
                 }
             }
             XmlSerializer deserializer = new XmlSerializer(typeof(HistoryDetails));                          //deserialize the content to login object
-            object obj = obj = deserializer.Deserialize(stringToStream(replacement));           
+            object obj = obj = deserializer.Deserialize(StringToStream(replacement));           
             HistoryDetails XmlData = (HistoryDetails)obj;
 
 
@@ -389,14 +389,14 @@ namespace Kanbanize
         #endregion
 
         #region private methods
-        private MemoryStream stringToStream(string input)
+        private MemoryStream StringToStream(string input)
         {
             byte[] byteArray = Encoding.ASCII.GetBytes(input);
             MemoryStream stream = new MemoryStream(byteArray);
             return stream;
         }
 
-        private IRestResponse getResponse(string adres)
+        private IRestResponse GetResponse(string adres)
         {
             var client = new RestClient(adres);
             var request = new RestRequest(Method.POST);
@@ -404,7 +404,7 @@ namespace Kanbanize
             return client.Execute(request);
         }
 
-        private IRestResponse getResponseLogin(string adres)
+        private IRestResponse GetResponseLogin(string adres)
         {
             var client = new RestClient(adres);
             var request = new RestRequest(Method.POST);
