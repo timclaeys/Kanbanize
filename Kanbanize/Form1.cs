@@ -33,15 +33,22 @@ namespace Kanbanize
 
         #region objects
         KanbanizeConnect kanbanizeApiObj;                                           //connection to the kanbanize api handler
-                
-        Login yourLogin;                                                            //object of kanbanize api handler
-        Projects projecten;                                                         //object of kanbanize api handler
-        Board Boards;                                                               //object of kanbanize api handler
-        HistoryDetails historyDetails;                                              //object of kanbanize api handler                      
 
-        YourProjects allProjects = new YourProjects();                              //all of the projects,board,tasks
-        List<YourTask> foundTasks = new List<YourTask>();                           //tasks that have the asked_name or a part of it in the assignees name
-        AutoCompleteStringCollection source = new AutoCompleteStringCollection();   //collection of words that occur in the assignee property, this is used s an autocomplete database for the search term
+        //object of kanbanize api handler
+        Login yourLogin;
+        //object of kanbanize api handler
+        Projects projecten;
+        //object of kanbanize api handler
+        Board Boards;                                                               
+        //object of kanbanize api handler 
+        HistoryDetails historyDetails;                                                                   
+
+        //all of the projects,board,tasks
+        YourProjects allProjects = new YourProjects();                              
+        //tasks that have the asked_name or a part of it in the assignees name
+        List<YourTask> foundTasks = new List<YourTask>();                           
+        //collection of words that occur in the assignee property, this is used s an autocomplete database for the search term
+        AutoCompleteStringCollection source = new AutoCompleteStringCollection();   
                         
         Excel.Application xlApp;                                                    //the excell application
         Excel.Workbook xlWorkBook;
