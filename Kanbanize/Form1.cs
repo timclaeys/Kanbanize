@@ -60,8 +60,8 @@ namespace Kanbanize
         }
 
         #region methods
-
-        private void FindTasksForDate(DateTime start, DateTime stop)//find the tasks in progress between the start and stop date
+        //find the tasks in progress between the start and stop date
+        private void FindTasksForDate(DateTime start, DateTime stop)
         {
             foundTasks = foundTasks.OrderBy(o => o.assignee).ToList();                                          //order the tasks according to the assignee
             int tasksInProgress = 0;                                                                            //not used now, can be used later on
@@ -158,8 +158,9 @@ namespace Kanbanize
                 }
             }
             
-        }           
-        private void WriteLineToExcel(YourTask yourTaskBuffer)//write a line to the current excell file with the property's of a task
+        }
+        //write a line to the current excell file with the property's of a task
+        private void WriteLineToExcel(YourTask yourTaskBuffer)
         {
             xlWorkSheet.Cells[currentRow, 1] = yourTaskBuffer.assignee;                             //write the tasks property's to the excel file
             xlWorkSheet.Cells[currentRow, 2] = yourTaskBuffer.title;
@@ -201,8 +202,9 @@ namespace Kanbanize
                     currentRow++;                                                                   //next row
                 }
             }
-        }                 
-        private void GetAllInfo()//download all of the projects, boards and tasks from the website "kanbanize.com" via the api handler
+        }
+        //download all of the projects, boards and tasks from the website "kanbanize.com" via the api handler
+        private void GetAllInfo()
         {
             projecten = kanbanizeApiObj.GetProjectsAndBoards();                                         //download the list of projects and boards
             foreach (Project Project in projecten.projectlist)                                          //for every project in this list
@@ -259,8 +261,9 @@ namespace Kanbanize
                 }
                 allProjects.yourProjectList.Add(yourProjectBuf);                                    //add  everything to "allProjects"
             }
-        }   
-        private void ReleaseObject(object obj)//release an object(used for the excel objects)
+        }
+        //release an object(used for the excel objects)
+        private void ReleaseObject(object obj)
         {
             try
             {
@@ -277,7 +280,8 @@ namespace Kanbanize
                 GC.Collect();
             }
         }
-        private bool SaveToExcel()//save the excel file
+        //save the excel file
+        private bool SaveToExcel()
         {
             try
             {
@@ -306,14 +310,16 @@ namespace Kanbanize
         }
 
         #region populate gui
-        private void PopulateLogin()//populate the login labels
+        //populate the login labels
+        private void PopulateLogin()
         {
             labelUsername.Text = "Username: " + yourLogin.username;
             labelRealName.Text = "Realname: " + yourLogin.realname;
             labelCompanyname.Text = "Companyname: " + yourLogin.companyname;
             labelTimezone.Text = "Timezone: " + yourLogin.timeZone;
         }
-        private void PopulateTreeView()//populate the treeview
+        //populate the treeview
+        private void PopulateTreeView()
         {
             foreach (YourProject yourProjectBuf in allProjects.yourProjectList)                                                                                         //every project (level 1)
             {
@@ -329,19 +335,22 @@ namespace Kanbanize
                 }
             }
         }
-        private void PopulateYourProject(YourProject yourProjectBuf, bool clearLabels)//populate project labels
+        //populate project labels
+        private void PopulateYourProject(YourProject yourProjectBuf, bool clearLabels)
         {
             labelProjectName.Text = (clearLabels) ? "Project name: " : "Project name: " + yourProjectBuf.name;
             labelProjectId.Text = (clearLabels) ? "Project id: " : "Project id: " + yourProjectBuf.id;
             button2.Enabled = false;
         }
-        private void PopulateYourBoard(YourBoard yourBoardBuf, bool clearLabels)//populate board labels
+        //populate board labels
+        private void PopulateYourBoard(YourBoard yourBoardBuf, bool clearLabels)
         {
             labelBoardName.Text = (clearLabels) ? "Board name: " : "Board name: " + yourBoardBuf.name;
             labelBoardId.Text = (clearLabels) ? "Board id: " : "Board id: " + yourBoardBuf.id;
 
         }
-        private void PopulateYourTask(YourTask yourTaskBuf, bool clearLabels)//populate task labels
+        //populate board labels
+        private void PopulateYourTask(YourTask yourTaskBuf, bool clearLabels)
         {
             labelTaskTitle.Text = (clearLabels) ? "Task title: " : "Task title: " + yourTaskBuf.title;
             labelTaskId.Text = (clearLabels) ? "Task id: " : "Task id: " + yourTaskBuf.taskid;
@@ -397,14 +406,16 @@ namespace Kanbanize
                 button2.Enabled = true;
             }
         }
-        private void PopulateYourSubTask(YourSubTask yourSubTaskBuf, bool clearLabels)//populate subtasks
+        //populate subtasks
+        private void PopulateYourSubTask(YourSubTask yourSubTaskBuf, bool clearLabels)
         {
             labelSubtaskTitle.Text = (clearLabels) ? "Subtask title: " : "Subtask title: " + yourSubTaskBuf.title;
             labelSubtaskId.Text = (clearLabels) ? "Subtask id: " : "Subtask id: " + yourSubTaskBuf.subtaskid;
             labelSubTaskAssignee.Text = (clearLabels) ? "Assignee: " : "Assignee: " + yourSubTaskBuf.assignee;
             labelSubTaskCompletionDate.Text = (clearLabels) ? "Completion date: " : "Completion date: " + yourSubTaskBuf.completiondate;
         }
-        private void PopulateYourTaskEvents(YourTaskEvent yourTaskEventBuf, bool clearlabels)//popullate taskevents
+        //popullate taskevents
+        private void PopulateYourTaskEvents(YourTaskEvent yourTaskEventBuf, bool clearlabels)
         {
             labelHistoryAuthor.Text = (clearlabels) ? "Author: " : "Author: " + yourTaskEventBuf.author;
             labelHistoryDetails.Text = (clearlabels) ? "Details: " : "Details: " + yourTaskEventBuf.details;
@@ -413,7 +424,8 @@ namespace Kanbanize
             labelHistoryId.Text = (clearlabels) ? "History id: " : "Hystory id: " + yourTaskEventBuf.historyid;
             labelHistoryEvent.Text = (clearlabels)? "History event: " : "history even:" +  yourTaskEventBuf.historyevent;
         }
-        private void EnableSearching()//enable the searchcontrols and assign the autocomplete list
+        //enable the searchcontrols and assign the autocomplete list
+        private void EnableSearching()
         {
             textBox2.Enabled = true;
             button1.Enabled = true;
@@ -706,7 +718,8 @@ namespace Kanbanize
         #endregion
 
         #region BackGroundWorker1: Get login and all tasks
-        private void BackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)                             //the work that needs to be done 
+        //the work that needs to be done
+        private void BackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
             yourLogin = kanbanizeApiObj.GetLogin();                                                         //download the api key and other login info
@@ -723,7 +736,8 @@ namespace Kanbanize
             }
 
         }
-        private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)     //the backgroundworker is done
+        //the backgroundworker is done
+        private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Result != "OK")                                                                           //if the result si different from ok
             {
@@ -797,8 +811,8 @@ namespace Kanbanize
 
             FindTasksForDate(start, stop);
         }
-
-        private void BackgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)//the progress is updated
+        //the progress is updated
+        private void BackgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             if (e.ProgressPercentage == 100)                                                                        //everything is downloaded
             {
@@ -813,8 +827,8 @@ namespace Kanbanize
             }
 
         }
-
-        private void BackgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)//everything is downloaded and the excel file is made
+        //everything is downloaded and the excel file is made
+        private void BackgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             SaveToExcel();                                          //save the excel file
             toolStripStatusLabel1.Text = "written to excell";
